@@ -41,29 +41,23 @@ public class Tarea implements Runnable {
         while (running) {
             
                 try {
-                    LocalDateTime now = LocalDateTime.now();
-                    LocalDateTime siguienteEjecucion = LocalDateTime.of(now.toLocalDate(), horaEjecucion);
-                    if (now.isAfter(siguienteEjecucion)) {
-                        siguienteEjecucion.plusDays(1);
-                    }
+                   LocalDateTime now = LocalDateTime.now();
+                   LocalDateTime siguienteEjecucion = LocalDateTime.of(now.toLocalDate(), horaEjecucion);
 
-                    Duration tiempoAntesEjecucion = Duration.between(now, siguienteEjecucion);
-                    long sleepTime = tiempoAntesEjecucion.toMillis();
+                   if(now.isAfter(siguienteEjecucion)){
+                        siguienteEjecucion = siguienteEjecucion.plusDays(1);
+                   }
 
-                    if (sleepTime > 0) {
-                        Thread.sleep(sleepTime);
-                    } else {
-                        Thread.sleep(1000); // Esperar un segundo si el cálculo resulta en un tiempo negativo
-                    }
+                   Thread.sleep(Duration.between(now, siguienteEjecucion).toMillis());
 
-                    now = LocalDateTime.now();
-                    if (running && status == Status.Pendiente &&
-                            now.toLocalDate().isAfter(ultimaEjecucion) &&
-                            now.toLocalTime().isAfter(horaEjecucion)) {
-                            con.ejecutarComando(comando);
+                   now = LocalDateTime.now();
+                   if(running && status == Status.Pendiente &&
+                        now.toLocalDate().isAfter(ultimaEjecucion)&&
+                        now.toLocalTime().isAfter(horaEjecucion)){
                             executeCommand();
-                        ultimaEjecucion = now.toLocalDate();
-                    }
+                            
+                            ultimaEjecucion = now.toLocalDate();
+                   }
 
                 } catch (Exception e) {
                     Thread.currentThread().interrupt();
@@ -83,11 +77,9 @@ public class Tarea implements Runnable {
         }
         System.out.println("Ejecutando el comando programado: " + comando);
         try {
-            String[] cmdArrayList = comando.split("\\s+");
-            ProcessBuilder pb = new ProcessBuilder(cmdArrayList);
-            Process process = pb.start();
-            int exitCode = process.waitFor();
-            System.out.println("Salida del comando: " + exitCode);
+            
+            con.ejecutarComando(comando);
+            
         } catch (Exception e) {
             System.out.println("Error en el comando: " + e.getMessage());
         }
