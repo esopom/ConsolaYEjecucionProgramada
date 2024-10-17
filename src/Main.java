@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class Main {
     private static List<Tarea> tareas = new ArrayList<>();
-    private static String fileNme = "C:\\Users\\tomas\\Desktop\\DAM2\\ServiciosYprocesos\\Practica2ATB\\src\\psptab.txt";
+    private static String fileNme = "/home/adrian/ConsolaYEjecucionProgramada/src/psptab.txt";
 
     public static void main(String[] args) {
         readFile(fileNme);

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Tarea implements Runnable {
-
+    Consola con = new Consola();
     private int id;
     private LocalTime horaEjecucion;
     private String comando;
@@ -29,7 +29,7 @@ public class Tarea implements Runnable {
         this.comando = comando.trim();
         this.status = Status.Pendiente;
         this.running = true;
-        this.ultimaEjecucion = LocalDate.now();
+        this.ultimaEjecucion = LocalDate.now().minusDays(1);
     }
     /**
      * Metodo que cuando el proceso esta corriendo comprueba que es su hora 
@@ -60,7 +60,8 @@ public class Tarea implements Runnable {
                     if (running && status == Status.Pendiente &&
                             now.toLocalDate().isAfter(ultimaEjecucion) &&
                             now.toLocalTime().isAfter(horaEjecucion)) {
-                        executeCommand();
+                            con.ejecutarComando(comando);
+                            executeCommand();
                         ultimaEjecucion = now.toLocalDate();
                     }
 
@@ -76,7 +77,7 @@ public class Tarea implements Runnable {
      * Metodo encargado de ejecutar el comando especificado en el documento de texto mediante ProcessBuilder
      */
     private void executeCommand() {
-
+        
         if (comando == null || comando.isEmpty()) {
             System.err.println("Error: Comando vacío en la tarea" + id);
         }
